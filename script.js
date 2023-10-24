@@ -7,17 +7,16 @@ const titulo = document.querySelector('.app__title')
 const botoes = document.querySelectorAll('.app__card-button')
 const startPauseBt = document.querySelector('#start-pause')
 const musicaFocoInput = document.querySelector('#alternar-musica')
-const iconeStartPause = document.querySelector('.app__card-primary-butto-icon')
+const iniciarOuPausarBt = document.querySelector('#start-pause span')
+const iniciarOuPausarBtIcone = document.querySelector(".app__card-primary-butto-icon") 
+const tempoNaTela = document.querySelector('#timer')
+
 const musica = new Audio('/sons/luna-rise-part-one.mp3')
 const audioPlay = new Audio('/sons/play.wav');
 const audioPausa = new Audio('/sons/pause.mp3');
 const audioTempoFinalizado = new Audio('./sons/beep.mp3')
-const iniciarOuPausarBt = document.querySelector('#start-pause span')
-const tempoNaTela = document.querySelector('#timer')
 
-
-
-let tempoDecorridoEmSegundos = 1500 
+let tempoDecorridoEmSegundos = 1500
 let intervaloId = null
 
 musica.loop = true
@@ -77,33 +76,34 @@ function alterarContexto(contexto) {
 }
 
 const contagemRegressiva = () => {
-    if(tempoDecorridoEmSegundos <= 0) {
-        //audioTempoFinalizado.play()  
-        alert('Tempo finalizado')
+    if(tempoDecorridoEmSegundos <= 0){
+        audioTempoFinalizado.play()
+        alert('Tempo finalizado!')
         zerar()
         return
     }
     tempoDecorridoEmSegundos -= 1
     mostrarTempo()
 }
+
 startPauseBt.addEventListener('click', iniciarOuPausar)
 
 function iniciarOuPausar() {
-    iconeStartPause.setAttribute('src', 'imagens/pause.png')
-    if (intervaloId) {
-        audioPausa.play();  
+    if(intervaloId){
+        audioPausa.play()
         zerar()
-        return // early return -- circuit breaker
+        return
     }
-    audioPlay.play();  
+    audioPlay.play()
     intervaloId = setInterval(contagemRegressiva, 1000)
     iniciarOuPausarBt.textContent = "Pausar"
+    iniciarOuPausarBtIcone.setAttribute('src', `/imagens/pause.png`)
 }
 
 function zerar() {
-    clearInterval(intervaloId)
-    iconeStartPause.setAttribute('src', '/imagens/play_arrow.png')
+    clearInterval(intervaloId) 
     iniciarOuPausarBt.textContent = "Começar"
+    iniciarOuPausarBtIcone.setAttribute('src', `/imagens/play_arrow.png`)
     intervaloId = null
 }
 
